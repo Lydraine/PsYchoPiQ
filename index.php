@@ -8,6 +8,7 @@
  *Version      : Secret Session <1.2.0>                                 *
  ************************************************************************
  *Contributors : Tobalase Akinyemi <stagnova@gmail.com>                 *
+ *               <add your name and email here on improvement>          *
  ************************************************************************
  *Summary      : A guessing game that picks a random number between 0   *
  *               and 101 and asks you to guess the number inputing      *
@@ -29,37 +30,46 @@
 //include('functions.php');
 session_start();
 
+// Check if email has been entered just previously.
 if(isset($_POST['email'])) {
-    // Check for empty email field before starting game play.
+    // Check for empty email field before initializing variables.
     if($_POST['email'] != "") {
+
+        // Initialize variables for number, number of guesses
+        // and email address respectively.
         $_SESSION['number'] = rand(1, 100);
         $_SESSION['tries'] = 0;
         $_SESSION['email'] = $_POST['email'];
     }    
 }
 
+// Check for affirmative replay.
 if(isset($_POST['replay'])) {
+    // Re-initialize variables for number and number of guesses.
     $_SESSION['number'] = rand(1, 100);
     $_SESSION['tries'] = 0;
 }
 
+// Otherwise in the case of game exit.
 elseif(isset($_POST['exit'])) {
+    //End User Session.
     $_SESSION = array();
     setcookie(session_name(), NULL, time()-(60*60*24*7*52*2000));
 }
 ?>
 
 <?php
-
+// Set initial page background color to purple.
 $color = "purple";
 
-
+// Check if guess has been submitted and
+// set for appropriate error messages for invalid guesses.
 if (isset($_POST['guess'])) {
 
-
+// Check if guess is empty.
 if($_POST['guess'] == "") {$errmsg ="Please Enter Your Guess.";}
 
-
+// Check if guess is numeric.
 elseif(!is_numeric($_POST['guess'])) {$errmsg = "Your guess should be a number!!!"; }
 
 // Check if guess is within the range of 1-100
@@ -109,7 +119,8 @@ body{background-color: <?php echo $color; /*echo set background color*/?>;
 <h1>
 <?php
 // ***HEAD***
-// Print greeting message if background color is purple.
+// Print greeting message if background color is purple and
+// email has been sipplied.
     if(isset($_SESSION['email']) AND $color == "purple") {
     echo "<h3>I have chosen a number </em>randomly</em> from 1 to 100</h3>";
     echo "<h2>What Do You Think It Is?</h2>";
@@ -117,6 +128,7 @@ body{background-color: <?php echo $color; /*echo set background color*/?>;
 // Print error message if there is any.
 elseif(isset($errmsg)) {echo "Invalid Input". "<br/>" . $errmsg ; }
 
+// Check if email has been set.
 elseif(isset($_SESSION['email'])) {
 
 // Print "RiGHt" if guess is correct.
@@ -131,13 +143,14 @@ else{echo "wRUNG";}
 
 <?php 
 // ***INPUT FIELDS***
-// Display input form if guess is incorrect. 
+// Display input form if guess is incorrect after
+// email has been supplied and not before. 
 if (isset($_SESSION['email']) AND $color != "green") {
     echo "<input name = \"guess\" type = \"text\"><br/>";
     echo "<input name = \"submit\" type =\"submit\" value = \"Enter\">";
 }
 
-// Display Replay button if guess is correct.
+// Display Replay question if guess is correct.
 elseif ($color == "green"){
     echo "<h3>Wanna Play Again?</h3>" . "<br/>";
     echo "<input name = \"replay\" type = \"submit\" value = \"yes\">";
