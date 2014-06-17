@@ -169,6 +169,5 @@ elseif($number < $guess) {echo "Go Lower";}
 </h2>
 </form>
 
-<?php /*print_r($_SESSION)*/;?>
 </body>
 </html>	
