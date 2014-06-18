@@ -27,19 +27,24 @@
 <?php
 // ***PRE-DISPLAY***
 
-//include('functions.php');
+include('config.php');
 session_start();
 
 // Check if email has been entered just previously.
 if(isset($_POST['email'])) {
     // Check for empty email field before initializing variables.
     if($_POST['email'] != "") {
-
-        // Initialize variables for number, number of guesses
-        // and email address respectively.
-        $_SESSION['number'] = rand(1, 100);
-        $_SESSION['tries'] = 0;
-        $_SESSION['email'] = $_POST['email'];
+      $book_open = mysql_connect("{$SERVER_NAME}", "{$SQL_USERNAME}", "$SQL_PASSWORD");
+      $book_chapter = mysql_select_db("{$DATABASE_NAME}", $book_open);
+      $book_note = mysql_query(
+			   "INSERT INTO {$DATABASE_TABLE} (email, name) VALUES('{$_POST['email']}')",
+			   $book_open);
+      $book_close = mysql_close($book_open);
+      // Initialize variables for number, number of guesses
+      // and email address respectively.
+      $_SESSION['number'] = rand(1, 100);
+      $_SESSION['tries'] = 0;
+      $_SESSION['email'] = $_POST['email'];
     }    
 }
 
@@ -181,6 +186,6 @@ elseif($number < $guess) {echo "Go Lower";}
 ?>
 </h2>
 </form>
-
+<?php include('counter.php');?>
 </body>
 </html>	
